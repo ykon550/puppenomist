@@ -1,4 +1,7 @@
 const ppt = require('puppeteer');
+require('dotenv').config();
+
+const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
 
 (async () => {
     console.log('hoge');
@@ -6,42 +9,26 @@ const ppt = require('puppeteer');
     console.log('hoge');
     const page = await browser.newPage();
     console.log('hoge');
+
+    //Login
     await page.goto('https://www.economist.com', {waitUntil: 'networkidle2'});
+    const baloonButton = await page.$x('//span[contains(text(), "Log in or sign up")]')
+    await baloonButton[0].click();
+    const gotoLogin = await page.$x('//button[@type="submit"]');
+    await gotoLogin[0].click();
+    await sleep(2000);
+    const email = await page.focus('input[type="email"]');
+    await page.type('input[type="email"]', process.env.USER_EMAIL);
+    await sleep(1000);
+    const password = await page.focus('input[type="password"]');
+    await page.type('input[type="password"]', process.env.USER_PASSWORD);
+    await sleep(1000);
+    const loginButton = await page.$("#submit-login");
+    await sleep(1000);
+    await loginButton.click();
 
-    /** 
-    var data = await page.$$eval('span', items => {
-        return items.map((item) => item.textContent);
-//        return items.filter((item) => item.textContent == "Log in or sign up");
-    });
-    data.map((data) => console.log(data));
-    */
 
-    /** 
-    var data = await page.$$eval('a', elems => {
-        return elems.filter((elem) => {
-            if(elem.href){
-                return elem.href.includes('authenticate')
-            } else {
-                return false
-            }
-        });
-    });
-    console.log(data);
-    */
+    await page.goto('https://www.economist.com/na/printedition/', {waitUntil: 'networkidle2'});
 
-    var data = await page.$$eval('a', elems => {
-        return elems.map((elem) => elem.href);
-    });
-    let but = data.filter((item) => {
-            return item && item.includes('authenticate')
-        })
-    console.log(but[0]);
-    await page.goto(but[0], {waitUntil: 'networkidle2'});
-
-    //const loginBaloon = await page.$('a[target="_blank"]');
-    //console.log(loginBaloon);
-    //await loginBaloon.click();
-    //const loginEl = await page.$('button[type="submit"]');
-    //await loginEl.click();
 })();
 
