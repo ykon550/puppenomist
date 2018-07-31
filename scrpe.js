@@ -53,5 +53,24 @@ const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
     // }
     // console.log(links);
 
+    // extract article
+    await page.goto('https://www.economist.com/the-world-this-week/2018/07/26/politics-this-week', {waitUntil:'networkidle2'});
+    const article = await page.evaluate(() => {
+        const articleElem = document.querySelector('article');
+        const ps = articleElem.querySelectorAll('p');
+        let _text = [];
+        for(const p of ps){
+            _text.push(p.textContent);
+        }
+        return _text;
+    })
+    console.log(article);
+
+    // const hoge = await page.$x('//article//p/text()');
+    // console.log(hoge);
+
+
+
+
 })();
 
