@@ -3,3 +3,4 @@
 .DS_Store
 /experimental
 /articles/*.json
+/articles/*/*.json
