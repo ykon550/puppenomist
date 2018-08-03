@@ -1,4 +1,3 @@
-const ppt = require('puppeteer');
 require('dotenv').config();
 const util = require('./util');
 
@@ -12,7 +11,7 @@ async function scrapeArticle(page, link) {
         filename: ''
     };
     await util.randomSleep();
-    await page.goto('https://www.economist.com' + link, { timeout: 100000, waitUntil: 'networkidle2' });
+    await page.goto(link, { timeout: 100000, waitUntil: 'networkidle2' });
     // expected URL example, https://www.economist.com/middle-east-and-africa/2018/07/26/zimbabwes-opposition-is-gaining-ground-ahead-of-upcoming-elections
     article.url = await page.url();
     article.title = article.url.split('/').slice(-4).join('_');

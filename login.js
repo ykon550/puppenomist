@@ -1,4 +1,3 @@
-const ppt = require('puppeteer');
 require('dotenv').config();
 const util = require('./util');
 
