@@ -2,6 +2,7 @@ require('dotenv').config();
 const util = require('./util');
 
 async function login(page) {
+    console.log("trying login...");
     await page.goto('https://www.economist.com', { timeout: 100000, waitUntil: 'networkidle2' });
     const baloonButton = await page.$x('//span[contains(text(), "Log in or sign up")]')
     await baloonButton[0].click();
@@ -25,6 +26,7 @@ async function login(page) {
         page.waitForNavigation(),
         util.sleep()
     ]);
+    console.log("succeeded to login!");
     return page;
 }
 module.exports = login;  
