@@ -27,6 +27,7 @@ class Scraper {
         article.title = article.url.split('/').slice(-4).join('_');
         article.section = article.url.split('/').slice(3, 4).join();
         article.date = article.url.split('/').slice(4, 7).join('');
+        article.dir = article.url.split('/').slice(4, 6).join('');
         article.filename = article.title + '.json';
     
         article.text = await this.page.evaluate(() => {
@@ -42,15 +43,19 @@ class Scraper {
                 console.log("skipped:" + article.url);
             }
             return _text;
-        });
+        }).catch((err) => console.log(err));
         return article;
     }
 
     async scrape() {
         const numArticles = this.links.length;
         for (const [idx, link] of this.links.entries()) {
-            const article = await this.scrapeArticle(link);
-            const dir = './articles/' + article.date + '/';
+            const article = await this.scrapeArticle(link)
+                .catch((err)=>{
+                    console.log(err);
+                    console.log("skipped " + link);
+                });
+            const dir = './articles/' + article.dir + '/';
             if (!fs.existsSync(dir)) {
                 fs.mkdirSync(dir);
             }
@@ -60,6 +65,7 @@ class Scraper {
             })
         }
     }
+
 }
 
 module.exports = Scraper;

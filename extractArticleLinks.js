@@ -8,7 +8,10 @@ async function extractArticleLinks(page, issueLink){
 
     let articleLinks = [];
     try {
-        const anchors = await page.$x('//main//a');
+        const anchors = await page.$x('//main//a')
+            .catch((err) => {
+                console.log(err);
+            });
         for (const a of anchors) {
             let link = await page.evaluate(a => a.href, a);
             if(link.startsWith(ARTICLE_URL_START)){
