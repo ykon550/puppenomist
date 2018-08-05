@@ -1,47 +1,46 @@
-const ppt = require('puppeteer');
 require('dotenv').config();
 const util = require('./util');
-const fs = require('fs');
-const login = require('./login');
 
-const targetYear = '2017';
-const coverLink = "https://www.economist.com/printedition/covers?print_region=76980&date_filter%5Bvalue%5D%5Byear%5D=" + targetYear;
+const currentIssueLink = "https://www.economist.com/printedition/";
 
 const isIssuePattern = (link) => {
     const PATTERN = "https://www.economist.com/printedition/";
     const NOT_PATTERN = "https://www.economist.com/printedition/covers/";
-    if (link.startsWith(PATTERN) && !link.startsWith(NOT_PATTERN)){
+    if (link.startsWith(PATTERN) && !link.startsWith(NOT_PATTERN)) {
         return true;
     } else {
         return false;
     }
 };
 
-(async () => {
-    //const browser = await ppt.launch();
-    const browser = await ppt.launch({ headless: false });
-    let page = await browser.newPage();
-    await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36');
-    await page.setViewport({ width: 1400, height: 1000 });
-    await login(page);
+async function extractIssueLinks(page, targetYear = '2018'){
+    console.log("trying to extract issue links...");
+    await page.goto(currentIssueLink, { timeout: 100000, waitUntil: 'networkidle2' });
+    const issuesButtons = await page.$x('//a[@href="/printedition/covers"]');
 
-    await page.goto(coverLink, { timeout: 100000, waitUntil: 'networkidle2' })
+    await Promise.all([
+        issuesButtons[1].click(),
+        page.waitForNavigation({ timeout: 50000 })
+    ]).catch((err) => console.log(err.message));
 
-    let issueLinks = [];
-    const anchors = await page.$x('//div/a').catch((err) => {
-        console.log(err);
-    });
+    await util.sleep();
+    await Promise.all([
+        page.select('select[name="date_filter[value][year]"]', targetYear),
+        page.waitForNavigation({ timeout: 50000 })
+    ]).catch((err) => console.log(err.message));
+
+    let _links = [];
+    const anchors = await page.$x('//div/a').catch((err) => console.log(err));
     for (const a of anchors) {
-        let link = await page.evaluate(a => a.href, a)
-            .catch((err)=>{
-                console.log(err);
-            });
+        let link = await page.evaluate(a => a.href, a).catch((err)=>console.log(err));
         if(isIssuePattern(link)){
-            issueLinks.push(link);
+            _links.push(link);
         }
     }
 
-    console.log(issueLinks);
+    const issueLinks = Array.from(new Set(_links));
+    console.log("Issue links extracted!");
+    return issueLinks;
+};
 
-    //await browser.close();
-})();
+module.exports = extractIssueLinks;

@@ -2,6 +2,9 @@ require('dotenv').config();
 const util = require('./util');
 const ARTICLE_URL_START = "https://www.economist.com/news/";
 
+//TODO
+//before 2014, the url starts with /nodes/ . not /news/
+
 async function extractArticleLinks(page, issueLink){
     await util.randomSleep();
     await page.goto(issueLink, { timeout: 100000, waitUntil: 'networkidle2' });
