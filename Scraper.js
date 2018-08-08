@@ -37,11 +37,16 @@ class Scraper {
             url: '',
             date: '',
             section: '',
-            filename: ''
+            filename: '',
+            fromUrl: ''
         };
-        await util.randomSleep();
-        await this.goto(link);
+        await Promise.all([
+            await util.sleep(),
+            await this.goto(link)
+        ]);
+
         // expected URL example, https://www.economist.com/middle-east-and-africa/2018/07/26/zimbabwes-opposition-is-gaining-ground-ahead-of-upcoming-elections
+        article.fromUrl = link;
         article.url = await this.page.url();
         article.title = article.url.split('/').slice(-4).join('_');
         article.section = article.url.split('/').slice(3, 4).join();
