@@ -24,7 +24,7 @@ let issueLinks = require('./ref/url2017_2.json');
     await page.setViewport({ width: 1200, height: 1000 });
 
     await login(page);
-    //issueLinks = await extractIssueLinks(page, '2018');
+    issueLinks = await extractIssueLinks(page, '2018');
 
     for (link of issueLinks){
         const articleLinks = await extractArticleLinks(page, link)

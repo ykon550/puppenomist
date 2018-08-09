@@ -1,6 +1,8 @@
 require('dotenv').config();
 const util = require('./util');
 
+const thisYear = new Date().getFullYear().toString();
+
 const currentIssueLink = "https://www.economist.com/printedition/";
 
 const isIssuePattern = (link) => {
@@ -13,7 +15,7 @@ const isIssuePattern = (link) => {
     }
 };
 
-async function extractIssueLinks(page, targetYear = '2018'){
+async function extractIssueLinks(page, targetYear = thisYear){
     console.log("trying to extract issue links...");
     await page.goto(currentIssueLink, { timeout: 100000, waitUntil: 'networkidle2' });
     const issuesButtons = await page.$x('//a[@href="/printedition/covers"]');
