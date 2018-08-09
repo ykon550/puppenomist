@@ -1,7 +1,10 @@
 {
   "name": "puppenomist",
   "version": "1.0.0",
-  "description": "",
+  "description": "Scraper for The Economist with Puppeteer",
+  "keywords": [
+    "Puppeteer"
+  ],
   "main": "index.js",
   "bin": {
     "puppenomist": "index.js"
@@ -9,8 +12,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "yzwhy",
+  "license": "MIT",
   "dependencies": {
     "commander": "^2.17.1",
     "dotenv": "^6.0.0",
