@@ -30,7 +30,16 @@ const puppenomist = async () => {
     });
     await page.setViewport({ width: 1200, height: 1000 });
 
-    await login(page);
+    const loginResult = await login(page).catch((error) => {
+        console.log(error.message);
+        return {isLogined:false};
+    });
+    if(!loginResult.isLogined){
+        console.log("terminating...");
+        await browser.close();
+        process.exit(1);
+    }
+
     const issueLinks = await extractIssueLinks(page, targetYear);
 
     for (link of issueLinks) {
