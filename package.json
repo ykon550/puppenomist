@@ -1,6 +1,6 @@
 {
   "name": "puppenomist",
-  "version": "0.1.1",
+  "version": "1.0.2",
   "description": "Scraper for The Economist with Puppeteer",
   "keywords": [
     "Puppeteer"
@@ -16,7 +16,7 @@
   "license": "MIT",
   "dependencies": {
     "commander": "^2.17.1",
-    "dotenv": "^6.0.0",
+    "prompt": "^1.0.0",
     "puppeteer": "^1.6.1"
   }
 }

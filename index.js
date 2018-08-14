@@ -1,10 +1,10 @@
 const program = require('commander');
 const ppt = require('puppeteer');
-require('dotenv').config();
 const login = require('./lib/login');
 const extractArticleLinks = require('./lib/extractArticleLinks');
 const extractIssueLinks = require('./lib/extractIssueLinks');
 const Scraper = require('./lib/Scraper');
+const askAccount = require('./lib/askAccount');
 const thisYear = new Date().getFullYear().toString();
 
 program
@@ -17,6 +17,8 @@ const targetYear = program.year;
 const isHeadless = !program.view;
 
 const puppenomist = async () => {
+    const user = await askAccount();
+
     const browser = await ppt.launch({ headless: isHeadless });
     let page = await browser.newPage();
 
@@ -30,7 +32,7 @@ const puppenomist = async () => {
     });
     await page.setViewport({ width: 1200, height: 1000 });
 
-    const loginResult = await login(page).catch((error) => {
+    const loginResult = await login(page, user).catch((error) => {
         console.log(error.message);
         return {isLogined:false};
     });
