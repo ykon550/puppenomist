@@ -1,6 +1,6 @@
 {
   "name": "puppenomist",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Scraper for The Economist with Puppeteer",
   "keywords": [
     "Puppeteer"
