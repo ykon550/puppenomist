@@ -5,3 +5,4 @@
 /articles/*.json
 /articles/*/*.json
 /ref/*
+log.json
