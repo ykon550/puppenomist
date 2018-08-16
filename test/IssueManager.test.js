@@ -1,6 +1,6 @@
-const Logger = require('../lib/Logger');
+const IssueManager = require('../lib/IssueManager');
 
-const issueLinks = [ 
+const testLinks = [ 
   'https://www.economist.com/printedition/2018-08-11',
   'https://www.economist.com/printedition/2018-08-04',
   'https://www.economist.com/printedition/2018-07-28',
@@ -21,5 +21,8 @@ const issueLinks = [
   'https://www.economist.com/printedition/2018-04-14'
 ];
 
-const logger = new Logger(0);
-logger.issueLinksExtracted(2018, issueLinks)
+const issueMgr = new IssueManager(true, 2018);
+
+issueMgr.issueLinks = testLinks;
+
+issueMgr.initStatus();
