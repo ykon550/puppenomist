@@ -2,7 +2,6 @@ const program = require('commander');
 const ppt = require('puppeteer');
 const login = require('./lib/login');
 const extractArticleLinks = require('./lib/extractArticleLinks');
-const extractIssueLinks = require('./lib/extractIssueLinks');
 const Scraper = require('./lib/Scraper');
 const IssueManager = require('./lib/IssueManager');
 const askAccount = require('./lib/askAccount');
@@ -50,14 +49,15 @@ const puppenomist = async () => {
     await issueMgr.selectTarget(page);
 
     for (link of issueMgr.issueLinks) {
+        issueMgr.setStarted(link);
         const articleLinks = await extractArticleLinks(page, link)
             .catch((err) => {
                 console.log(err);
             });
-        console.log("started " + link);
 
         const scraper = new Scraper(page, articleLinks);
         await scraper.scrape();
+        issueMgr.setDone(link);
     }
 
     await browser.close();
