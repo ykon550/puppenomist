@@ -11,13 +11,13 @@ program
     .usage('-y year')
     .option('-y, --year [value]', 'set target year to scrape, like 2018. Default value is This year', thisYear)
     .option('-v, --view', 'set this option when you want to see GUI')
-    .option('-f, --fresh', 'fresh start for whole year')
+    .option('-f, --force', 'force start from scracth')
     .parse(process.argv);
 
 const targetYear = program.year || thisYear;
 const isHeadless = !program.view;
 // scrape mode, scrape from scratch or resume from last time
-const isFresh = program.fresh?  true: false;
+const isForce = program.force?  true: false;
 
 const puppenomist = async () => {
     const user = await askAccount();
@@ -45,7 +45,8 @@ const puppenomist = async () => {
         process.exit(1);
     }
 
-    const issueMgr = new IssueManager(isFresh, targetYear);
+    const scrapeMode = IssueManager.decideMode(isForce, targetYear);
+    const issueMgr = new IssueManager(scrapeMode, targetYear);
     await issueMgr.selectTarget(page);
 
     for (link of issueMgr.issueLinks) {
@@ -54,7 +55,6 @@ const puppenomist = async () => {
             .catch((err) => {
                 console.log(err);
             });
-
         const scraper = new Scraper(page, articleLinks);
         await scraper.scrape();
         issueMgr.setDone(link);
